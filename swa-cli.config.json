@@ -1,0 +1,10 @@
+{
+  "$schema": "https://aka.ms/azure/static-web-apps-cli/schema",
+  "configurations": {
+    "serverless-wiki": {
+      "appLocation": "frontend",
+      "apiLocation": ".",
+      "outputLocation": "."
+    }
+  }
+}

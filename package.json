@@ -4,10 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "swa start",
     "build": "tsc",
     "prestart": "tsc",
-    "start": "func start"
+    "start": "swa start"
   },
   "author": "xl1",
   "license": "CC0-1.0",
