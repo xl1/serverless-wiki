@@ -44,28 +44,61 @@ async function onPageClick(ev) {
     }
 }
 
+/** @param {KeyboardEvent} ev */
+function onTextAreaInput(ev) {
+    if (ev.key === 'Tab') {
+        ev.preventDefault();
+        const textArea = /** @type {HTMLTextAreaElement} */(ev.target);
+        textArea.setRangeText('    ', textArea.selectionStart, textArea.selectionEnd, 'end');
+    }
+}
+
+/**
+ * @param {string} name
+ * @param {string} markdown
+ */
+function setContent(name, markdown) {
+    const parsed = marked.parse(markdown, { gfm: true });
+    const content = DOMPurify.sanitize(parsed);
+    setState({ name, markdown, content, editing: false });
+}
+
 async function navigate() {
     let name = location.pathname;
     if (name === '/') name = '/index';
     const response = await fetch(`/_data/pages${name}.md`);
     if (response.ok) {
-        const markdown = await response.text();
-        const parsed = marked.parse(markdown, { gfm: true });
-        const content = DOMPurify.sanitize(parsed);
-        setState({ name, markdown, content });
+        setContent(name, await response.text());
     } else {
-        setState({ name, editing: true });
+        setState({ name, markdown: '', content: '', editing: true });
     }
 }
 
-async function save() {
-    setState({ editing: false });
+/** @param {State} state */
+async function save(state) {
+    const markdown = /** @type {HTMLTextAreaElement} */(document.getElementById('markdown'));
+    const response = await fetch('/api/pages', {
+        method: 'POST',
+        body: JSON.stringify({
+            name: state.name,
+            markdown: markdown.value,
+        }),
+        headers: {
+            'content-type': 'application/json'
+        }
+    });
+    if (response.ok) {
+        setContent(state.name, markdown.value);
+    } else {
+        const { message } = await response.json();
+        alert(message);
+    }
 }
 
 /** @param {State} state */
 const Menu = state => state.editing
     ? html`<div id="menu">
-        <button @click=${ save }>Save</button>
+        <button @click=${() => save(state)}>Save</button>
         <button @click=${() => setState({ editing: false })}>Cancel</button>
     </div>`
     : html`<div id="menu">
@@ -79,7 +112,12 @@ const Page = state => html`
 
 /** @param {State} state */
 const Editor = state => html`
-    <div class="editor"><textarea .value=${ state.markdown }></textarea></div>
+    <div class="editor">
+        <textarea id="markdown"
+            .value=${ state.markdown }
+            @keydown=${ onTextAreaInput }
+        ></textarea>
+    </div>
 `;
 
 /** @param {State} state */
@@ -95,4 +133,5 @@ const App = state => html`
 `;
 
 navigate().catch(console.error);
+self.addEventListener('popstate', navigate);
 navigator.serviceWorker.register('serviceworker.js').catch(console.error);

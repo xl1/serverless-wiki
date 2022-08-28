@@ -1,6 +1,6 @@
 {
   "navigationFallback": {
     "rewrite": "/index.html",
-    "exclude": ["/_*"]
+    "exclude": ["/_data/*"]
   }
 }
