@@ -1,5 +1,6 @@
+import path from 'path';
 import { Octokit } from '@octokit/rest';
-import { Context, HttpRequest } from '@azure/functions';
+import { Context, Exception, HttpRequest } from '@azure/functions';
 import { MessageResponse, msg } from './response';
 
 const octokit = new Octokit({
@@ -8,10 +9,19 @@ const octokit = new Octokit({
 const repository = process.env.GITHUB_REPOSITORY;
 const branch = process.env.GITHUB_BRANCH;
 
+function validateName(name: unknown): boolean {
+    return typeof(name) === 'string'
+        && !!name
+        && name.startsWith('/')
+        && !name.startsWith('/api/')
+        && !name.startsWith('/_data/')
+        && name === encodeURI(name);
+}
+
 export default async function (context: Context, req: HttpRequest): Promise<MessageResponse> {
     const { name, markdown } = req.body;
     
-    if (typeof(name) !== 'string') return msg(400, 'invalid name');
+    if (!validateName(name)) return msg(400, 'invalid name');
     if (typeof(markdown) !== 'string') return msg(400, 'invalid markdown');
     if (!repository) return msg(200, 'repository not set');
 
@@ -21,6 +31,11 @@ export default async function (context: Context, req: HttpRequest): Promise<Mess
         repo,
         path: `frontend/_data/pages${name}.md`
     };
+    const relativePath = path.relative('frontend/_data', fileParams.path);
+    if (!relativePath || relativePath.startsWith('..') || path.isAbsolute(relativePath)) {
+        return msg(400, 'invalid path');
+    }
+
     const { data } = await octokit.repos.getContent(fileParams).catch(() => ({ data: undefined }));
     const sha = (data && 'sha' in data) ? data.sha : undefined;
 
@@ -36,8 +51,8 @@ export default async function (context: Context, req: HttpRequest): Promise<Mess
                 email: 'nouser@example.com'
             },
         });
-    } finally {
-        // TODO catch conflict error
+    } catch (e: any) {
+        return msg(500, e.message);
     }
 
     return msg(200, 'ok');
