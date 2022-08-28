@@ -13,7 +13,7 @@ import { unsafeHTML } from 'https://unpkg.com/lit-html@2/directives/unsafe-html.
  * @prop {boolean} editing
  * @prop {string} content
  * @prop {string} markdown
- * @prop {string} path
+ * @prop {string} name
  */
 
 /**
@@ -32,7 +32,7 @@ const setState = createStore({
     editing: false,
     content: '',
     markdown: '',
-    path: '',
+    name: '',
 });
 
 /** @param {MouseEvent} ev */
@@ -45,16 +45,16 @@ async function onPageClick(ev) {
 }
 
 async function navigate() {
-    let path = location.pathname;
-    if (path === '/') path = '/index';
-    const response = await fetch(`/_data/pages${path}.md`);
+    let name = location.pathname;
+    if (name === '/') name = '/index';
+    const response = await fetch(`/_data/pages${name}.md`);
     if (response.ok) {
         const markdown = await response.text();
         const parsed = marked.parse(markdown, { gfm: true });
         const content = DOMPurify.sanitize(parsed);
-        setState({ path, markdown, content });
+        setState({ name, markdown, content });
     } else {
-        setState({ path, editing: true });
+        setState({ name, editing: true });
     }
 }
 
@@ -95,3 +95,4 @@ const App = state => html`
 `;
 
 navigate().catch(console.error);
+navigator.serviceWorker.register('serviceworker.js').catch(console.error);
