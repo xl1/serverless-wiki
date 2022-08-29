@@ -29,7 +29,8 @@ export default async function (context: Context, req: HttpRequest): Promise<Mess
     const fileParams = {
         owner,
         repo,
-        path: `frontend/_data/pages${name}.md`
+        path: `frontend/_data/pages${name}.md`,
+        ref: branch
     };
     const relativePath = path.relative('frontend/_data', fileParams.path);
     if (!relativePath || relativePath.startsWith('..') || path.isAbsolute(relativePath)) {
@@ -39,21 +40,17 @@ export default async function (context: Context, req: HttpRequest): Promise<Mess
     const { data } = await octokit.repos.getContent(fileParams).catch(() => ({ data: undefined }));
     const sha = (data && 'sha' in data) ? data.sha : undefined;
 
-    try {
-        await octokit.repos.createOrUpdateFileContents({
-            ...fileParams,
-            message: 'update',
-            content: new Buffer(markdown, 'utf8').toString('base64'),
-            sha,
-            branch,
-            committer: {
-                name: 'wiki user',
-                email: 'nouser@example.com'
-            },
-        });
-    } catch (e: any) {
-        return msg(500, e.message);
-    }
+    await octokit.repos.createOrUpdateFileContents({
+        ...fileParams,
+        message: 'update',
+        content: Buffer.from(markdown, 'utf8').toString('base64'),
+        sha,
+        branch,
+        committer: {
+            name: 'wiki user',
+            email: 'nouser@example.com'
+        },
+    });
 
     return msg(200, 'ok');
 };
