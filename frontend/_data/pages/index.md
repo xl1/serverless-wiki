@@ -1,3 +1,3 @@
 # serverless wiki
 
-Lorem ipsum dolor sit amet
+[Lorem ipsum](lorem-ipsum) dolor sit amet
