@@ -1,5 +1,11 @@
 # wiki.xl1.dev
 
-[Lorem ipsum](lorem-ipsum) dolor sit amet
+### らくがき用
+- [Lorem ipsum](lorem-ipsum) dolor sit amet
 
-[xl1 について](xl1)
+### 調べてみました
+- [ヘムヘムは何の動物？](ヘムヘムは何の動物？)
+
+### その他
+- [xl1 について](xl1)
+- [Twitter ひなたぼっこ同好会（ひなぼ部）](ひなぼ部)
