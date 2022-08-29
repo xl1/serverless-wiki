@@ -29,7 +29,7 @@ export default async function (context: Context, req: HttpRequest): Promise<Mess
     const fileParams = {
         owner,
         repo,
-        path: `frontend/_data/pages${name}.md`,
+        path: `frontend/_data/pages${decodeURI(name)}.md`,
         ref: branch
     };
     const relativePath = path.relative('frontend/_data', fileParams.path);
