@@ -96,22 +96,21 @@ async function save(state) {
 }
 
 /** @param {State} state */
-const Menu = state => state.editing
-    ? html`<div id="menu">
-        <button @click=${() => save(state)}>Save</button>
-        <button @click=${() => setState({ editing: false })}>Cancel</button>
-    </div>`
-    : html`<div id="menu">
-        <button @click=${() => setState({ editing: true })}>Edit</button>
-    </div>`;
-
-/** @param {State} state */
 const Page = state => html`
+    <div class="menu">
+        <a href="/" @click=${ onPageClick }>🔼</a>
+        <button @click=${() => setState({ editing: true })}>Edit</button>
+    </div>
     <div class="main" @click=${ onPageClick }>${ unsafeHTML(state.content) }</div>
 `;
 
 /** @param {State} state */
 const Editor = state => html`
+    <div class="menu">
+        <a href="/" @click=${ onPageClick }>🔼</a>
+        <button @click=${() => save(state)}>Save</button>
+        <button @click=${() => setState({ editing: false })}>Cancel</button>
+    </div>
     <div class="editor">
         <textarea id="markdown"
             .value=${ state.markdown }
@@ -127,7 +126,6 @@ const Index = state => html`
 
 /** @param {State} state */
 const App = state => html`
-    ${ Menu(state) }
     ${ state.editing ? Editor(state) : Page(state) }
     ${ Index(state) }
 `;
