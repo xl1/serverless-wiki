@@ -15,7 +15,7 @@ function validateName(name: unknown): boolean {
         && name.startsWith('/')
         && !name.startsWith('/api/')
         && !name.startsWith('/_data/')
-        && name === encodeURI(name);
+        && name === encodeURI(decodeURI(name));
 }
 
 export default async function (context: Context, req: HttpRequest): Promise<MessageResponse> {
