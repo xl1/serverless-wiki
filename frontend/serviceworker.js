@@ -5,6 +5,10 @@ const sw = /** @type {ServiceWorkerGlobalScope & typeof globalThis} */(globalThi
 
 const cacheName = 'pages.1';
 
+sw.addEventListener('activate', ev => {
+    ev.waitUntil(sw.clients.claim());
+});
+
 sw.addEventListener('fetch', async ev => {
     const url = new URL(ev.request.url);
     if (url.pathname.startsWith('/_data/pages/')) {
