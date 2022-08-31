@@ -57,6 +57,38 @@ function onTextAreaInput(ev) {
     }
 }
 
+/** @param {DragEvent} ev */
+function onTextAreaDrop(ev) {
+    ev.preventDefault();
+    const file = ev.dataTransfer && ev.dataTransfer.files[0];
+    upload(file).catch(console.error);
+}
+
+/** @param {File|null} file */
+async function upload(file) {
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024 || !file.type.startsWith('image/')) {
+        alert('unsupported file');
+        return;
+    }
+
+    const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: file,
+        headers: {
+            'content-type': 'application/octet-stream',
+            'x-file-type': file.type,
+        }
+    });
+    const { message } = await response.json();
+    if (response.ok) {
+        const textArea = getTextArea();
+        textArea.setRangeText(`![${file.name}](${message})`, textArea.selectionStart, textArea.selectionEnd, 'select');
+    } else {
+        alert(message);
+    }
+}
+
 /**
  * @param {string} name
  * @param {string} markdown
@@ -125,6 +157,8 @@ const Editor = state => html`
         <textarea id="markdown"
             .value=${ state.markdown }
             @keydown=${ onTextAreaInput }
+            @dragover=${ e => e.preventDefault() }}
+            @drop=${ onTextAreaDrop }
         ></textarea>
     </div>
 `;
