@@ -7,9 +7,9 @@ repository: <https://github.com/xl1/serverless-wiki>
 
 ### 特徴
 
-- 高速
-- 少ない機能
-- サーバーレス
+- はやい: 高速
+- やすい: サーバーレス
+- まずい: 少ない機能
 
 
 ### 構成
@@ -21,3 +21,6 @@ repository: <https://github.com/xl1/serverless-wiki>
 - 更新は GitHub API を用いて、リポジトリに [commit が追加される形](https://github.com/xl1/serverless-wiki/commits/wiki)で行われる
 - commit の度に GitHub Actions で SWA にデプロイされる
 - デプロイされるまでの間は service worker にキャッシュしたデータを返すことで、編集した本人には即時に編集できたように見える
+
+
+- [ほかの機能](/about/features)
