@@ -47,7 +47,7 @@ async function cachePage(ev) {
     } = await ev.request.clone().json();
     if (name) {
         const cache = await caches.open(cacheName);
-        cache.put(`/_data/pages${name}.md`, new Response(markdown, {
+        await cache.put(`/_data/pages${name}.md`, new Response(markdown, {
             status: 200,
             headers: {
                 'content-type': 'text/markdown',
