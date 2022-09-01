@@ -35,6 +35,8 @@ const setState = createStore({
     name: '',
 });
 
+const getTextArea = () => /** @type {HTMLTextAreaElement} */(document.getElementById('markdown'));
+
 /** @param {MouseEvent} ev */
 async function onPageClick(ev) {
     if (ev.target instanceof HTMLAnchorElement && ev.target.origin === location.origin) {
@@ -48,7 +50,7 @@ async function onPageClick(ev) {
 function onTextAreaInput(ev) {
     if (ev.key === 'Tab') {
         ev.preventDefault();
-        const textArea = /** @type {HTMLTextAreaElement} */(ev.target);
+        const textArea = getTextArea();
         textArea.setRangeText('    ', textArea.selectionStart, textArea.selectionEnd, 'end');
     }
 }
@@ -76,19 +78,19 @@ async function navigate() {
 
 /** @param {State} state */
 async function save(state) {
-    const markdown = /** @type {HTMLTextAreaElement} */(document.getElementById('markdown'));
+    const textArea = getTextArea();
     const response = await fetch('/api/pages', {
         method: 'POST',
         body: JSON.stringify({
             name: state.name,
-            markdown: markdown.value,
+            markdown: textArea.value,
         }),
         headers: {
             'content-type': 'application/json'
         }
     });
     if (response.ok) {
-        setContent(state.name, markdown.value);
+        setContent(state.name, textArea.value);
     } else {
         const { message } = await response.json();
         alert(message);
@@ -132,4 +134,4 @@ const App = state => html`
 
 navigate().catch(console.error);
 self.addEventListener('popstate', navigate);
-navigator.serviceWorker.register('serviceworker.js').catch(console.error);
+navigator.serviceWorker.register('/serviceworker.js').catch(console.error);
