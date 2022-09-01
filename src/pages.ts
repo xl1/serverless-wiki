@@ -1,6 +1,6 @@
 import path from 'path';
 import { Octokit } from '@octokit/rest';
-import { Context, Exception, HttpRequest } from '@azure/functions';
+import { Context, HttpRequest } from '@azure/functions';
 import { MessageResponse, msg } from './response';
 
 const octokit = new Octokit({
