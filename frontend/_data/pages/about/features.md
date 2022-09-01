@@ -17,9 +17,11 @@
 - WYSIWYG エディタ
 - 共同編集
 - RSS/Atom フィード
+    - [GitHub の branch feed](https://github.com/xl1/serverless-wiki/commits/wiki.atom) がある
 
 
 ## どうしよっか
 
 - 検索
 - OGP とか Twitter Cards
+- 自動リンク
