@@ -11,6 +11,7 @@ import { unsafeHTML } from 'https://unpkg.com/lit-html@2/directives/unsafe-html.
 /**
  * @typedef {object} State
  * @prop {boolean} editing
+ * @prop {boolean} sending
  * @prop {string} content
  * @prop {string} markdown
  * @prop {string} name
@@ -30,6 +31,7 @@ function createStore(initial) {
 
 const setState = createStore({
     editing: false,
+    sending: false,
     content: '',
     markdown: '',
     name: '',
@@ -70,14 +72,18 @@ async function navigate() {
     if (name === '/') name = '/index';
     const response = await fetch(`/_data/pages${name}.md`);
     if (response.ok) {
-        setContent(name, await response.text());
-    } else {
-        setState({ name, markdown: '', content: '', editing: true });
+        const markdown = await response.text();
+        if (markdown) {
+            setContent(name, markdown);
+            return;
+        }
     }
+    setState({ name, markdown: '', content: '', editing: true });
 }
 
 /** @param {State} state */
 async function save(state) {
+    setState({ sending: true });
     const textArea = getTextArea();
     const response = await fetch('/api/pages', {
         method: 'POST',
@@ -88,6 +94,8 @@ async function save(state) {
         headers: {
             'content-type': 'application/json'
         }
+    }).finally(() => {
+        setState({ sending: false });
     });
     if (response.ok) {
         setContent(state.name, textArea.value);
@@ -110,7 +118,7 @@ const Page = state => html`
 const Editor = state => html`
     <div class="menu">
         <a href="/" @click=${ onPageClick }>🔼</a>
-        <button @click=${() => save(state)}>Save</button>
+        <button @click=${() => save(state)} .disabled=${ state.sending }>Save</button>
         <button @click=${() => setState({ editing: false })}>Cancel</button>
     </div>
     <div class="editor">
