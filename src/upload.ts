@@ -34,6 +34,6 @@ export default async function (context: Context, req: HttpRequest): Promise<Mess
         }
     });
 
-    const url = imageBaseUrl ? `${imageBaseUrl}/{name}` : blockBlobClient.url;
+    const url = imageBaseUrl ? `${imageBaseUrl}/${name}` : blockBlobClient.url;
     return msg(200, url);
 }
