@@ -64,6 +64,12 @@ function onTextAreaDrop(ev) {
     upload(file).catch(console.error);
 }
 
+/** @param {ClipboardEvent} ev */
+function onTextAreaPaste(ev) {
+    const file = ev.clipboardData && ev.clipboardData.files[0];
+    upload(file).catch(console.error);
+}
+
 /** @param {File|null} file */
 async function upload(file) {
     if (!file) return;
@@ -159,6 +165,7 @@ const Editor = state => html`
             @keydown=${ onTextAreaInput }
             @dragover=${ e => e.preventDefault() }}
             @drop=${ onTextAreaDrop }
+            @paste=${ onTextAreaPaste }
         ></textarea>
     </div>
 `;
