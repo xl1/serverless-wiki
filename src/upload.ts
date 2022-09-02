@@ -5,7 +5,7 @@ import { MessageResponse, msg } from './response';
 import imageType from 'image-type';
 
 const blobConnectionString = process.env.IMAGE_STORAGE!;
-const blobContainerName = process.env.IMAGE_CONTAINER_NAME ?? 'images';
+const blobContainerName = process.env.IMAGE_CONTAINER_NAME || 'images';
 const imageBaseUrl = process.env.IMAGE_BASE_URL;
 
 export default async function (context: Context, req: HttpRequest): Promise<MessageResponse> {
