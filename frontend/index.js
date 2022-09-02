@@ -11,6 +11,7 @@ import { unsafeHTML } from 'https://unpkg.com/lit-html@2/directives/unsafe-html.
 /**
  * @typedef {object} State
  * @prop {boolean} editing
+ * @prop {boolean} sending
  * @prop {string} content
  * @prop {string} markdown
  * @prop {string} name
@@ -30,6 +31,7 @@ function createStore(initial) {
 
 const setState = createStore({
     editing: false,
+    sending: false,
     content: '',
     markdown: '',
     name: '',
@@ -55,6 +57,44 @@ function onTextAreaInput(ev) {
     }
 }
 
+/** @param {DragEvent} ev */
+function onTextAreaDrop(ev) {
+    ev.preventDefault();
+    const file = ev.dataTransfer && ev.dataTransfer.files[0];
+    upload(file).catch(console.error);
+}
+
+/** @param {ClipboardEvent} ev */
+function onTextAreaPaste(ev) {
+    const file = ev.clipboardData && ev.clipboardData.files[0];
+    upload(file).catch(console.error);
+}
+
+/** @param {File|null} file */
+async function upload(file) {
+    if (!file) return;
+    if (file.size > 5 * 1024 * 1024 || !file.type.startsWith('image/')) {
+        alert('unsupported file');
+        return;
+    }
+
+    const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: file,
+        headers: {
+            'content-type': 'application/octet-stream',
+            'x-file-type': file.type,
+        }
+    });
+    const { message } = await response.json();
+    if (response.ok) {
+        const textArea = getTextArea();
+        textArea.setRangeText(`![${file.name}](${message})`, textArea.selectionStart, textArea.selectionEnd, 'select');
+    } else {
+        alert(message);
+    }
+}
+
 /**
  * @param {string} name
  * @param {string} markdown
@@ -70,14 +110,18 @@ async function navigate() {
     if (name === '/') name = '/index';
     const response = await fetch(`/_data/pages${name}.md`);
     if (response.ok) {
-        setContent(name, await response.text());
-    } else {
-        setState({ name, markdown: '', content: '', editing: true });
+        const markdown = await response.text();
+        if (markdown) {
+            setContent(name, markdown);
+            return;
+        }
     }
+    setState({ name, markdown: '', content: '', editing: true });
 }
 
 /** @param {State} state */
 async function save(state) {
+    setState({ sending: true });
     const textArea = getTextArea();
     const response = await fetch('/api/pages', {
         method: 'POST',
@@ -88,6 +132,8 @@ async function save(state) {
         headers: {
             'content-type': 'application/json'
         }
+    }).finally(() => {
+        setState({ sending: false });
     });
     if (response.ok) {
         setContent(state.name, textArea.value);
@@ -110,13 +156,16 @@ const Page = state => html`
 const Editor = state => html`
     <div class="menu">
         <a href="/" @click=${ onPageClick }>🔼</a>
-        <button @click=${() => save(state)}>Save</button>
+        <button @click=${() => save(state)} .disabled=${ state.sending }>Save</button>
         <button @click=${() => setState({ editing: false })}>Cancel</button>
     </div>
     <div class="editor">
         <textarea id="markdown"
             .value=${ state.markdown }
             @keydown=${ onTextAreaInput }
+            @dragover=${ e => e.preventDefault() }}
+            @drop=${ onTextAreaDrop }
+            @paste=${ onTextAreaPaste }
         ></textarea>
     </div>
 `;
