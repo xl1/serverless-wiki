@@ -6,6 +6,7 @@ import imageType from 'image-type';
 
 const blobConnectionString = process.env.IMAGE_STORAGE!;
 const blobContainerName = process.env.IMAGE_CONTAINER_NAME ?? 'images';
+const imageBaseUrl = process.env.IMAGE_BASE_URL;
 
 export default async function (context: Context, req: HttpRequest): Promise<MessageResponse> {
     if (!req.body || !req.body.length) return msg(400, 'image not set');
@@ -22,15 +23,17 @@ export default async function (context: Context, req: HttpRequest): Promise<Mess
         return msg(400, 'jpg, png, gif and webp images are supported');
     }
 
+    const name = uuidv4();
     const blobServiceClient = BlobServiceClient.fromConnectionString(blobConnectionString);
     const containerClient = blobServiceClient.getContainerClient(blobContainerName);
     await containerClient.createIfNotExists({ access: 'blob' });
-    const blockBlobClient = containerClient.getBlockBlobClient(uuidv4());
+    const blockBlobClient = containerClient.getBlockBlobClient(name);
     await blockBlobClient.upload(buffer, buffer.length, {
         blobHTTPHeaders: {
             blobContentType: contentType
         }
     });
 
-    return msg(200, blockBlobClient.url);
+    const url = imageBaseUrl ? `${imageBaseUrl}/{name}` : blockBlobClient.url;
+    return msg(200, url);
 }

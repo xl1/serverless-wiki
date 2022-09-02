@@ -4,6 +4,7 @@
     "FUNCTIONS_WORKER_RUNTIME": "node",
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "IMAGE_STORAGE": "UseDevelopmentStorage=true",
+    "IMAGE_BASE_URL": "",
     "GITHUB_TOKEN": "",
     "GITHUB_REPOSITORY": "",
     "GITHUB_BRANCH": ""
