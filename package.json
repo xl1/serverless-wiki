@@ -11,7 +11,7 @@
   "author": "xl1",
   "license": "CC0-1.0",
   "engines": {
-    "node": ">=16.0.0"
+    "node": "^16.0.0"
   },
   "dependencies": {
     "@azure/storage-blob": "^12.11.0",
