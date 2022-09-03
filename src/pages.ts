@@ -42,7 +42,7 @@ export default async function (context: Context, req: HttpRequest): Promise<Mess
 
     await octokit.repos.createOrUpdateFileContents({
         ...fileParams,
-        message: 'update',
+        message: `update ${decodeURI(name)}`,
         content: Buffer.from(markdown, 'utf8').toString('base64'),
         sha,
         branch,
