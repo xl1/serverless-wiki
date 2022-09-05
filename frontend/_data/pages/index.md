@@ -1,7 +1,7 @@
 # wiki.xl1.dev
 
 ### らくがき用
-- [Lorem ipsum](lorem-ipsum) dolor sit amet
+- [おためし用ページ](lorem-ipsum)
 
 ### 調べてみました
 - [ヘムヘムは何の動物？](ヘムヘムは何の動物？)
