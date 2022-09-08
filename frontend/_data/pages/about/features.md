@@ -1,6 +1,7 @@
 ## バグ報告
 
--
+- たまに Save 押したときに 503 帰ってくるけど原因わかんない
+- 
 
 
 ## ほしい機能
@@ -19,7 +20,8 @@
 - 共同編集
 - RSS/Atom フィード
     - [GitHub の branch feed](https://github.com/xl1/serverless-wiki/commits/wiki.atom) がある
-- GitHub スタイルのチェックリスト `- [ ]` のサポート
+- 閲覧・編集権限の制限
+    - [Azure SWA の認証機能](https://docs.microsoft.com/ja-jp/azure/static-web-apps/authentication-authorization)である程度できるので本体ではサポートしない
 
 
 ## どうしよっか
