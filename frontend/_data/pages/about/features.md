@@ -1,6 +1,7 @@
 ## バグ報告
 
 - たまに Save 押したときに 503 帰ってくるけど原因わかんない
+    - これ古い [extension bundle 外して](https://github.com/xl1/serverless-wiki/commit/7a2f24589723fb9af4a976a2857d87e6aa72907c)から起きてない
 - 
 
 
