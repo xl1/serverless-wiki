@@ -1,12 +1,12 @@
 //@ts-check
 //@ts-ignore
-import { marked } from 'https://unpkg.com/marked@4?module';
+import { marked } from 'https://esm.sh/marked@4';
 //@ts-ignore
-import DOMPurify from 'https://unpkg.com/dompurify@2.4.0/dist/purify.es.js?module';
+import DOMPurify from 'https://esm.sh/dompurify@2';
 //@ts-ignore
-import { html, render } from 'https://unpkg.com/lit-html@2?module';
+import { html, render } from 'https://esm.sh/lit-html@2';
 //@ts-ignore
-import { unsafeHTML } from 'https://unpkg.com/lit-html@2/directives/unsafe-html.js?module';
+import { unsafeHTML } from 'https://esm.sh/lit-html@2/directives/unsafe-html.js';
 
 /**
  * @typedef {object} State
@@ -121,22 +121,18 @@ async function navigate() {
 
 /** @param {State} state */
 async function save(state) {
-    setState({ sending: true });
-    const textArea = getTextArea();
+    const name = state.name;
+    const markdown = getTextArea().value;
+
+    setState({ markdown: state.markdown, sending: true });
     const response = await fetch('/api/pages', {
         method: 'POST',
-        body: JSON.stringify({
-            name: state.name,
-            markdown: textArea.value,
-        }),
-        headers: {
-            'content-type': 'application/json'
-        }
-    }).finally(() => {
-        setState({ sending: false });
-    });
+        body: JSON.stringify({ name, markdown }),
+        headers: { 'content-type': 'application/json' }
+    }).finally(() => setState({ sending: false }));
+
     if (response.ok) {
-        setContent(state.name, textArea.value);
+        setContent(name, markdown);
     } else {
         const { message } = await response.json();
         alert(message);
