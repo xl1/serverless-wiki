@@ -2,7 +2,7 @@
 //@ts-ignore
 import { marked } from 'https://unpkg.com/marked@4?module';
 //@ts-ignore
-import DOMPurify from 'https://unpkg.com/dompurify@2?module';
+import DOMPurify from 'https://unpkg.com/dompurify@2.4.0/dist/purify.es.js?module';
 //@ts-ignore
 import { html, render } from 'https://unpkg.com/lit-html@2?module';
 //@ts-ignore
