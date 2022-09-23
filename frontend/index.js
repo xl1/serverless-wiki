@@ -121,22 +121,18 @@ async function navigate() {
 
 /** @param {State} state */
 async function save(state) {
-    setState({ sending: true });
-    const textArea = getTextArea();
+    const name = state.name;
+    const markdown = getTextArea().value;
+
+    setState({ markdown: state.markdown, sending: true });
     const response = await fetch('/api/pages', {
         method: 'POST',
-        body: JSON.stringify({
-            name: state.name,
-            markdown: textArea.value,
-        }),
-        headers: {
-            'content-type': 'application/json'
-        }
-    }).finally(() => {
-        setState({ sending: false });
-    });
+        body: JSON.stringify({ name, markdown }),
+        headers: { 'content-type': 'application/json' }
+    }).finally(() => setState({ sending: false }));
+
     if (response.ok) {
-        setContent(state.name, textArea.value);
+        setContent(name, markdown);
     } else {
         const { message } = await response.json();
         alert(message);
