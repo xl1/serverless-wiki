@@ -11,7 +11,6 @@ import { unsafeHTML } from 'https://esm.sh/lit-html@2/directives/unsafe-html.js'
 /**
  * @typedef {object} State
  * @prop {boolean} editing
- * @prop {boolean} sending
  * @prop {string} content
  * @prop {string} markdown
  * @prop {string} name
@@ -31,7 +30,6 @@ function createStore(initial) {
 
 const setState = createStore({
     editing: false,
-    sending: false,
     content: '',
     markdown: '',
     name: '',
@@ -124,12 +122,15 @@ async function save(state) {
     const name = state.name;
     const markdown = getTextArea().value;
 
-    setState({ markdown: state.markdown, sending: true });
+    const button = /** @type {HTMLButtonElement} */(document.getElementById('save'));
+    button.disabled = true;
     const response = await fetch('/api/pages', {
         method: 'POST',
         body: JSON.stringify({ name, markdown }),
         headers: { 'content-type': 'application/json' }
-    }).finally(() => setState({ sending: false }));
+    }).finally(() => {
+        button.disabled = false;
+    });
 
     if (response.ok) {
         setContent(name, markdown);
@@ -152,7 +153,7 @@ const Page = state => html`
 const Editor = state => html`
     <div class="menu">
         <a href="/" @click=${ onPageClick }>🔼</a>
-        <button @click=${() => save(state)} .disabled=${ state.sending }>Save</button>
+        <button @click=${() => save(state)} id="save">Save</button>
         <button @click=${() => setState({ editing: false })}>Cancel</button>
     </div>
     <div class="editor">
