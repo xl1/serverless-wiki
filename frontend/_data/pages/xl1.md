@@ -1,6 +1,8 @@
 # xl1
 
-### [software](/xl1/software)
+### [ソフト](/xl1/software)
+
+### [ポケモン](/xl1/pokemon)
 
 ### [質問箱](何もしてないに100の質問)
 
