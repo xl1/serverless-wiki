@@ -29,8 +29,8 @@ async function getPage(ev) {
     if (!fetchedResponse.ok) return cachedResponse;
 
     const cacheDate = cachedResponse.headers.get('last-modified') || '';
-    const modifledDate = fetchedResponse.headers.get('last-modified') || '';
-    if (Date.parse(cacheDate) > Date.parse(modifledDate)) {
+    const modifiedDate = fetchedResponse.headers.get('last-modified') || '';
+    if (Date.parse(cacheDate) > Date.parse(modifiedDate)) {
         return cachedResponse;
     } else {
         return fetchedResponse.clone();

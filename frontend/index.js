@@ -160,7 +160,7 @@ const Editor = state => html`
         <textarea id="markdown"
             .value=${ state.markdown }
             @keydown=${ onTextAreaInput }
-            @dragover=${ e => e.preventDefault() }}
+            @dragover=${ e => e.preventDefault() }
             @drop=${ onTextAreaDrop }
             @paste=${ onTextAreaPaste }
         ></textarea>
