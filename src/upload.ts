@@ -18,7 +18,7 @@ export default async function (context: Context, req: HttpRequest): Promise<Mess
     }
 
     const buffer = Buffer.from(req.body);
-    const detected = imageType(buffer);
+    const detected = await imageType(buffer);
     if (!detected || !['jpg', 'png', 'gif', 'webp'].includes(detected.ext)) {
         return msg(400, 'jpg, png, gif and webp images are supported');
     }
