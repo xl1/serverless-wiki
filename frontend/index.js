@@ -7,6 +7,7 @@ import DOMPurify from 'https://esm.sh/dompurify@2';
 import { html, render } from 'https://esm.sh/lit-html@2';
 //@ts-ignore
 import { unsafeHTML } from 'https://esm.sh/lit-html@2/directives/unsafe-html.js';
+import { safeStorage } from './safeStorage.js';
 
 /**
  * @typedef {object} State
@@ -18,13 +19,14 @@ import { unsafeHTML } from 'https://esm.sh/lit-html@2/directives/unsafe-html.js'
 
 /**
  * @param {State} initial
- * @returns {(newValues: Partial<State>) => void}
+ * @returns {(newValues: Partial<State>) => State}
  */
 function createStore(initial) {
     let data = initial;
     return newValues => {
         data = { ...data, ...newValues };
         render(App(data), document.body);
+        return data;
     };
 }
 
@@ -46,13 +48,17 @@ async function onPageClick(ev) {
     }
 }
 
-/** @param {KeyboardEvent} ev */
-function onTextAreaInput(ev) {
+/**
+ * @param {KeyboardEvent} ev
+ * @param {State} state
+ */
+function onTextAreaInput(ev, state) {
+    const textArea = getTextArea();
     if (ev.key === 'Tab') {
         ev.preventDefault();
-        const textArea = getTextArea();
         textArea.setRangeText('    ', textArea.selectionStart, textArea.selectionEnd, 'end');
     }
+    safeStorage.setItem(state.name, textArea.value);
 }
 
 /** @param {DragEvent} ev */
@@ -114,7 +120,17 @@ async function navigate() {
             return;
         }
     }
-    setState({ name, markdown: '', content: '', editing: true });
+    edit(setState({ name, markdown: '', content: '' }));
+}
+
+/** @param {State} state */
+function edit(state) {
+    const markdown = safeStorage.getItem(state.name);
+    if (markdown && markdown !== state.markdown) {
+        setState({ markdown, editing: true });
+    } else {
+        setState({ editing: true });
+    }
 }
 
 /** @param {State} state */
@@ -133,6 +149,7 @@ async function save(state) {
     });
 
     if (response.ok) {
+        safeStorage.removeItem(name);
         setContent(name, markdown);
     } else {
         const { message } = await response.json();
@@ -141,10 +158,16 @@ async function save(state) {
 }
 
 /** @param {State} state */
+function cancel(state) {
+    safeStorage.removeItem(state.name);
+    setState({ editing: false });
+}
+
+/** @param {State} state */
 const Page = state => html`
     <div class="menu">
         <a href="/" @click=${ onPageClick }>🔼</a>
-        <button @click=${() => setState({ editing: true })}>Edit</button>
+        <button @click=${() => edit(state)}>Edit</button>
     </div>
     <div class="main" @click=${ onPageClick }>${ unsafeHTML(state.content) }</div>
 `;
@@ -154,12 +177,12 @@ const Editor = state => html`
     <div class="menu">
         <a href="/" @click=${ onPageClick }>🔼</a>
         <button @click=${() => save(state)} id="save">Save</button>
-        <button @click=${() => setState({ editing: false })}>Cancel</button>
+        <button @click=${() => cancel(state)}>Cancel</button>
     </div>
     <div class="editor">
         <textarea id="markdown"
             .value=${ state.markdown }
-            @keydown=${ onTextAreaInput }
+            @keydown=${ e => onTextAreaInput(e, state) }
             @dragover=${ e => e.preventDefault() }
             @drop=${ onTextAreaDrop }
             @paste=${ onTextAreaPaste }

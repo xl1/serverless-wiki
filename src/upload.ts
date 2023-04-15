@@ -1,7 +1,7 @@
 import { Context, HttpRequest } from '@azure/functions';
 import { BlobServiceClient } from '@azure/storage-blob';
 import { v4 as uuidv4 } from 'uuid';
-import { MessageResponse, msg } from './response';
+import { MessageResponse, msg } from './response.js';
 import imageType from 'image-type';
 
 const blobConnectionString = process.env.IMAGE_STORAGE!;
