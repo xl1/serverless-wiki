@@ -7,6 +7,7 @@ import DOMPurify from 'https://esm.sh/dompurify@2';
 import { html, render } from 'https://esm.sh/lit-html@2';
 //@ts-ignore
 import { unsafeHTML } from 'https://esm.sh/lit-html@2/directives/unsafe-html.js';
+import { safeStorage } from './safeStorage.js';
 
 /**
  * @typedef {object} State
@@ -57,7 +58,7 @@ function onTextAreaInput(ev, state) {
         ev.preventDefault();
         textArea.setRangeText('    ', textArea.selectionStart, textArea.selectionEnd, 'end');
     }
-    sessionStorage.setItem(state.name, textArea.value);
+    safeStorage.setItem(state.name, textArea.value);
 }
 
 /** @param {DragEvent} ev */
@@ -124,7 +125,7 @@ async function navigate() {
 
 /** @param {State} state */
 function edit(state) {
-    const markdown = sessionStorage.getItem(state.name);
+    const markdown = safeStorage.getItem(state.name);
     if (markdown && markdown !== state.markdown) {
         setState({ markdown, editing: true });
     } else {
@@ -148,7 +149,7 @@ async function save(state) {
     });
 
     if (response.ok) {
-        sessionStorage.removeItem(name);
+        safeStorage.removeItem(name);
         setContent(name, markdown);
     } else {
         const { message } = await response.json();
@@ -158,7 +159,7 @@ async function save(state) {
 
 /** @param {State} state */
 function cancel(state) {
-    sessionStorage.removeItem(state.name);
+    safeStorage.removeItem(state.name);
     setState({ editing: false });
 }
 
