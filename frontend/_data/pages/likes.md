@@ -1,0 +1,26 @@
+いいね機能の名称案
+
+- いいね
+- イイネ！
+- Like
+- Favorite
+- 👍
+- ♡
+- お気に入り
+- ハート
+- [高く評価](https://support.google.com/youtube/answer/6083270)
+- [Upvote](https://support.reddithelp.com/hc/en-us/articles/7419626610708)
+- [スター](https://s.hatena.ne.jp/)
+- [+1](https://plus.google.com/)
+- [ニコる](https://dic.nicovideo.jp/a/%E3%83%8B%E3%82%B3%E3%82%8B)
+- [スキ](https://www.help-note.com/hc/ja/articles/360008881214), [スキ!](https://help.tumblr.com/hc/ja/articles/231855888)
+- [ズッキュン](https://help.suzuri.jp/hc/ja/articles/208951948)
+- ふぁぼ
+- おすすめ
+- グッド
+- ナイス
+- ℒℴѵℯ
+- ええやん
+- すこ
+- オキニ
+- 好（ハオ）
