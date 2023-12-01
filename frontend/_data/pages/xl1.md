@@ -6,7 +6,7 @@
 
 ### [質問箱](何もしてないに100の質問)
 
-### [Twitter](https://twitter.com/xl1blue)
+### [X](https://x.com/xl1blue)
 
 ### [GitHub](https://github.com/xl1)
 
