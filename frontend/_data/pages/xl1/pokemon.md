@@ -25,10 +25,11 @@
 
 伝説ルールだけやる人になってる
 
+- S31 [未来白馬](https://gist.github.com/xl1/816783308c17e4726b599c3dcb2b5d71)
+  <img width="447" src="https://gist.github.com/user-attachments/assets/cb82a3e1-3874-4c6f-88a8-a7ca8182e185">
+
 - S18 [白馬展開](https://gist.github.com/xl1/c1c4ee818b3ab8915716fb5991c56cb1)
   <img width="447" src="https://gist.github.com/assets/705435/f5538df0-56d1-46b0-a354-16968bab1e95">
-
--
 
 
 ## ソード・シールド
