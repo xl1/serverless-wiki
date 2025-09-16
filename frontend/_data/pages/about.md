@@ -23,4 +23,7 @@ repository: <https://github.com/xl1/serverless-wiki>
 - デプロイされるまでの間は service worker にキャッシュしたデータを返すことで、編集した本人には即時に編集できたように見える
 
 
-[ほかの機能について](/about/features)
+### 参考
+
+- [コンセプトの説明](https://gist.github.com/xl1/3b7835c6c5b25b5cf1f9348b4cf5aeca)
+- [ほかの機能について](/about/features)
