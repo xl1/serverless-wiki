@@ -1,7 +1,7 @@
 import path from 'path';
 import { Octokit } from '@octokit/rest';
-import { Context, HttpRequest } from '@azure/functions';
-import { MessageResponse, msg } from './response.js';
+import { app, HttpRequest, HttpResponseInit, InvocationContext } from '@azure/functions';
+import { msg } from './response.js';
 
 const octokit = new Octokit({
     auth: process.env.GITHUB_TOKEN
@@ -9,7 +9,7 @@ const octokit = new Octokit({
 const repository = process.env.GITHUB_REPOSITORY;
 const branch = process.env.GITHUB_BRANCH;
 
-function validateName(name: unknown): boolean {
+function validateName(name: unknown): name is string {
     return typeof(name) === 'string'
         && !!name
         && name.startsWith('/')
@@ -18,8 +18,8 @@ function validateName(name: unknown): boolean {
         && name === encodeURI(decodeURI(name));
 }
 
-export default async function (context: Context, req: HttpRequest): Promise<MessageResponse> {
-    const { name, markdown } = req.body;
+async function pagesHandler(req: HttpRequest, _context: InvocationContext): Promise<HttpResponseInit> {
+    const { name, markdown } = await req.json().catch(() => ({})) as any;
 
     if (!validateName(name)) return msg(400, 'invalid name');
     if (typeof(markdown) !== 'string') return msg(400, 'invalid markdown');
@@ -54,3 +54,9 @@ export default async function (context: Context, req: HttpRequest): Promise<Mess
 
     return msg(200, 'ok');
 };
+
+app.http('pages', {
+    methods: ['POST'],
+    authLevel: 'anonymous',
+    handler: pagesHandler
+});
