@@ -4,7 +4,9 @@
     "serverless-wiki": {
       "appLocation": "frontend",
       "apiLocation": ".",
-      "outputLocation": "."
+      "outputLocation": ".",
+      "apiLanguage": "node",
+      "apiVersion": "20"
     }
   }
 }

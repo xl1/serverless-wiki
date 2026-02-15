@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "prestart": "tsc",
@@ -13,13 +13,14 @@
   "license": "CC0-1.0",
   "dependencies": {
     "@azure/storage-blob": "^12.11.0",
-    "@octokit/rest": "^19.0.4",
+    "@octokit/rest": "^22.0.0",
     "image-type": "^5.2.0",
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "@azure/functions": "^3.2.0",
-    "@azure/static-web-apps-cli": "^1.0.6",
+    "@azure/functions": "^4.0.0",
+    "@azure/static-web-apps-cli": "^2.0.7",
+    "@types/node": "^24.7.1",
     "@types/uuid": "^9.0.1",
     "typescript": "^5.0.4"
   }
