@@ -2,6 +2,8 @@
   "compilerOptions": {
     "target": "esnext",
     "module": "Node16",
+    "rootDir": "src",
+    "types": ["node"],
     "outDir": "dist",
     "strict": true,
     "esModuleInterop": true
