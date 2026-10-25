@@ -16,7 +16,7 @@
   "dependencies": {
     "@azure/storage-blob": "^12.11.0",
     "@octokit/rest": "^22.0.1",
-    "image-type": "^5.2.0",
+    "image-type": "^6.1.0",
     "uuid": "^14.0.0"
   },
   "devDependencies": {
