@@ -3,24 +3,27 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-  "main": "index.js",
+  "engines": {
+    "node": "22.x"
+  },
   "scripts": {
     "build": "tsc",
-    "prestart": "tsc",
+    "prestart": "npm run build",
     "start": "swa start"
   },
   "author": "xl1",
   "license": "CC0-1.0",
   "dependencies": {
     "@azure/storage-blob": "^12.11.0",
-    "@octokit/rest": "^19.0.4",
-    "image-type": "^5.2.0",
-    "uuid": "^9.0.0"
+    "@octokit/rest": "^22.0.1",
+    "image-type": "^6.1.0",
+    "uuid": "^14.0.0"
   },
   "devDependencies": {
     "@azure/functions": "^3.2.0",
-    "@azure/static-web-apps-cli": "^1.0.6",
-    "@types/uuid": "^9.0.1",
-    "typescript": "^5.0.4"
+    "@azure/static-web-apps-cli": "^2.1.0",
+    "@types/node": "^22.20.5",
+    "@types/uuid": "^10.0.0",
+    "typescript": "^7.0.2"
   }
 }
